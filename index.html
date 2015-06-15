@@ -1,0 +1,313 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+			
+		<script src="http://code.jquery.com/jquery.min.js"></script>
+		<script src="vendor/three.js/Three.js"></script>
+		<script src="vendor/three.js/Detector.js"></script>
+		<script src="vendor/three.js/OrbitControls.js"></script>
+
+		<script src="vendor/threex/THREEx.screenshot.js"></script>
+		<script src="vendor/threex/THREEx.WindowResize.js"></script>
+		<script src="vendor/threex.dragpancontrols.js"></script>
+
+		<link  href="css/main.css" rel="stylesheet"/>
+	</head>
+<body>
+	<!-- three.js container -->
+    	<div id="container"></div>
+	<!-- info on screen display -->
+	<div id="info">
+		<div class="top">
+		</div>
+		<div class="bottom" id="inlineDoc" >
+			<select name="times" id="times">
+			</select>
+			<br/>
+			<input id="userImage" type="file"/>
+		</div> 
+		<div id="drop-dialog" class="hidden">
+			<h2>DRAG HERE</h2>
+		</div>
+	</div> 
+
+	<script type="text/javascript">
+
+var times = {
+"-3300": "117.9.-3300m.png",
+"-3000": "118.9.-3000m.png",
+"-2750": "119.9.-2750m.png",
+"-2500": "120.9.-2500m.png",
+"-2250": "121.9.-2250m.png",
+"-2200": "122.9.-2200m.png",
+"-2160": "123.9.-2160m.png",
+"-2130": "124.9.-2130m.png",
+"-2100": "125.9.-2100m.png",
+"-2080": "126.9.-2080m.png",
+"-2060": "127.9.-2060m.png",
+"-2040": "128.9.-2040m.png",
+"-2020": "129.9.-2020m.png",
+"-2000": "130.9.-2000m.png",
+"-1980": "131.9.-1980m.png",
+"-1960": "132.9.-1960m.png",
+"-1940": "133.9.-1940m.png",
+"-1920": "134.9.-1920m.png",
+"-1900": "135.9.-1900m.png",
+"-1880": "136.9.-1880m.png",
+"-1860": "137.9.-1860m.png",
+"-1840": "138.9.-1840m.png",
+"-1830": "139.8.-1830m.png",
+"-1820": "139.9.-1820m.png",
+"-1800": "140.9.-1800m.png",
+"-1780": "141.9.-1780m.png",
+"-1760": "142.9.-1760m.png",
+"-1740": "143.9.-1740m.png",
+"-1720": "144.9.-1720m.png",
+"-1700": "145.9.-1700m.png",
+"-1680": "146.9.-1680m.png",
+"-1660": "147.9.-1660m.png",
+"-1640": "148.9.-1640m.png",
+"-1620": "149.9.-1620m.png",
+"-1600": "150.9.-1600m.png",
+"-1580": "151.9.-1580m.png",
+"-1560": "152.9.-1560m.png",
+"-1540": "153.9.-1540m.png",
+"-1520": "154.9.-1520m.png",
+"-1500": "155.9.-1500m.png",
+"-1480": "156.9.-1480m.png",
+"-1460": "157.9.-1460m.png",
+"-1440": "158.9.-1440m.png",
+"-1420": "159.9.-1420m.png",
+"-1400": "160.9.-1400m.png",
+"-1380": "161.9.-1380m.png",
+"-1350": "162.9.-1350m.png",
+"-1300": "163.9.-1300m.png",
+"-1250": "164.9.-1250m.png",
+"-1200": "165.9.-1200m.png",
+"-1150": "166.9.-1150m.png",
+"-1120": "167.7.-1120m.png",
+"-1100": "167.9.-1100m.png",
+"-1050": "168.9.-1050m.png",
+"-1000": "169.9.-1000m.png",
+"-950": "170.9.-950m.png",
+"-900": "171.9.-900m.png",
+"-850": "172.9.-850m.png",
+"-800": "173.9.-800m.png",
+"-750": "174.-750m.png",
+"-740": "175.-740m.png",
+"-730": "176.-730m.png",
+"-720": "177.-720m.png",
+"-710": "178.-710m.png",
+"-700": "179.-700m.png",
+"-690": "180.-690m.png",
+"-680": "181.-680m.png",
+"-670": "182.-670m.png",
+"-660": "183.-660m.png",
+"-650": "184.-650m.png",
+"-640": "185.-640m.png",
+"-630": "186.-630m.png",
+"-620": "187.-620m.png",
+"-610": "188.-610m.png",
+"-600": "189.-600m.png",
+"-590": "190.-590m.png",
+"-580": "191.-580m.png",
+"-570": "192.-570m.png",
+"-560": "193.-560m.png",
+"-550": "194.-550m.png",
+"-540": "195.-540m.png",
+"-530": "196.-530m.png",
+"-520": "197.-520m.png",
+"-510": "198.-510m.png",
+"-500": "199.-500m.png",
+"-490": "200.-490m.png",
+"-480": "201.-480m.png",
+"-470": "202.-470m.png",
+"-460": "203.-460m.png",
+"-450": "204.-450m.png",
+"-440": "205.-440m.png",
+"-430": "206.-430m.png",
+"-420": "207.-420m.png",
+"-410": "208.-410m.png",
+"-400": "209.-400m.png",
+"-390": "210.-390m.png",
+"-380": "211.-380m.png",
+"-370": "212.-370m.png",
+"-360": "213.-360m.png",
+"-350": "214.-350m.png",
+"-340": "215.-340m.png",
+"-330": "216.-330m.png",
+"-320": "217.-320m.png",
+"-310": "218.-310m.png",
+"-300": "219.-300m.png",
+"-290": "220.-290m.png",
+"-280": "221.-280m.png",
+"-270": "222.-270m.png",
+"-260": "223.-260m.png",
+"-250": "224.-250m.png",
+"-240": "225.-240m.png",
+"-230": "226.-230m.png",
+"-220": "227.-220m.png",
+"-210": "228.-210m.png",
+"-200": "229.-200m.png",
+"-190": "230.-190m.png",
+"-180": "231.-180m.png",
+"-170": "232.-170m.png",
+"-160": "233.-160m.png",
+"-150": "234.-150m.png",
+"-140": "235.-140m.png",
+"-130": "236.-130m.png",
+"-120": "237.-120m.png",
+"-110": "238.-110m.png",
+"-100": "239.-100m.png",
+"-90": "240.-90m.png",
+"-80": "241.-80m.png",
+"-70": "242.-70m.png",
+"-60": "243.-60m.png",
+"-50": "244.-50m.png",
+"-40": "245.-40m.png",
+"-30": "246.-30m.png",
+"-20": "247.-20m.png",
+"-10": "248.-10m.png",
+"0": "249.0m.png",
+"+12.5": "251.+12.5m.png",
+"+25": "252.+25m.png",
+"+37.5": "253.+37.5m.png",
+"+50": "254.+50m.png",
+"+62.5": "255.+62.5m.png",
+"+75": "256.+75m.png",
+"+87.5": "257.+87.5m.png",
+"+100": "258.+100m.png",
+"+112.5": "259.+112.5m.png",
+"+125": "260.+125m.png",
+"+137.5": "261.+137.5m.png",
+"+150": "262.+150m.png",
+"+162.5": "263.+162.5m.png",
+"+175": "264.+175m.png",
+"+187.5": "265.+187.5m.png",
+"+200": "266.+200m.png",
+"+212.5": "267.+212.5m.png",
+"+225": "268.+225m.png",
+"+237.5": "269.+237.5m.png",
+"+250": "270.+250m.png",
+"+275": "270.+275m.png",
+"+300": "270.+300m.png",
+}
+
+		var stats, scene, renderer, composer;
+		var camera, cameraControl;
+	    var image = document.createElement( 'img' );
+
+		var geometry	= new THREE.IcosahedronGeometry(1, 5);
+	    var texture = new THREE.Texture( image );
+		var material	= new THREE.MeshLambertMaterial({map: texture});
+		var mesh	= new THREE.Mesh( geometry, material ); 	
+
+		if( !init() )	animate();
+
+		// init the scene
+		function init(){
+
+			if( Detector.webgl ){
+				renderer = new THREE.WebGLRenderer({
+					antialias		: true,	// to get smoother output
+					preserveDrawingBuffer	: true	// to allow screenshot
+				});
+				renderer.setClearColor( 0x000000 );
+			}else{
+				Detector.addGetWebGLMessage();
+				return true;
+			}
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.getElementById('container').appendChild(renderer.domElement);
+
+			// create a scene
+			scene = new THREE.Scene();
+
+			// put a camera in the scene
+			camera	= new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 1, 10000 );
+			camera.position.set(0, 0, 5);
+			scene.add(camera);
+
+			// create a camera contol
+			cameraControls	= new THREE.OrbitControls( camera, $("#container").get(0) );
+
+			// transparently support window resize
+			THREEx.WindowResize.bind(renderer, camera);
+			// allow 'p' to make screenshot
+			THREEx.Screenshot.bindKey(renderer);
+
+			// here you add your objects
+			// - you will most likely replace this part by your own
+			var light	= new THREE.AmbientLight(  0xffffff );
+			scene.add( light );
+			scene.add( mesh );
+		}
+
+		// animation loop
+		function animate() {
+
+			// loop on request animation loop
+			// - it has to be at the begining of the function
+			// - see details at http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
+			requestAnimationFrame( animate );
+
+			// do the render
+			render();
+
+		}
+
+		// render the scene
+		function render() {
+			// variable which is increase by Math.PI every seconds - usefull for animation
+			var PIseconds	= Date.now() * Math.PI;
+
+			// update camera controls
+			cameraControls.update();
+
+
+			// actually render the scene
+			renderer.render( scene, camera );
+		}
+		function loadFile (texture_file) {
+			var reader = new FileReader();
+
+			reader.onload = function (e) {
+			    loadUrl(e.target.result);
+			};
+
+			reader.readAsDataURL(texture_file);
+		}
+		function loadUrl (texture_url) {
+			texture = THREE.ImageUtils.loadTexture( texture_url );
+		    // texture = new THREE.Texture( image );
+		    image.onload = function()  {
+		        texture.needsUpdate = true;
+		    };
+		    material.map = texture;
+		    material.needsUpdate = true;
+		}
+		$(function () {
+			for (var i = 0, keys = Object.keys(times), li = Object.keys(times).length; i < li; i++) {
+				var key = keys[i];
+				var value = times[key];
+				var option = $('<option>', {value: value, text: key});
+				$('#times').append(option)
+			};
+		})
+		$('#times').bind('keydown change', (function(event) {
+			var file = $('#times').val().toString();
+			var url = "maps/" + file;
+			loadUrl(url);
+		}));
+		$("#userImage").change(function(){
+		    userImage = $("#userImage")[0];
+		    if (userImage.files && userImage.files[0]) {
+		        loadFile(userImage.files[0])
+		    }
+		});
+	</script>
+</body>
+</html>

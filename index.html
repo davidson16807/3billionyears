@@ -45,14 +45,41 @@
 		}
     </script>
     <script type="x-shader/x-fragment" id="fragmentShader">
+        const float PI = 3.1415926;
+
         varying vec2 vUv;
         varying vec4 vPosition;
         uniform sampler2D texture1;
 
-        void main() {
-            gl_FragColor = texture2D(texture1, vUv.xy);
+        float mollweide_x(float theta, float lon){
+        	return 2.*sqrt(2.)/PI * lon * cos(theta);
         }
-    </script>
+
+        float mollweide_y(float theta){
+        	return sqrt(2.) * sin(theta);
+        }
+
+        float mollweide_theta(float theta, float lat){
+        	return theta - 	(2.*theta + sin(2.*theta) - PI*sin(lat)) / 
+        					(2. + 2.*cos(2.*theta));
+        }
+
+        void main() {
+        	float lat = (2. * vUv.y - 1.0) * (PI/2.);
+        	float lon = (2. * vUv.x - 1.0) * (PI);
+			float theta = lat;
+        	if(abs(lat) != PI/2.){
+				theta = mollweide_theta(theta, lat);
+				theta = mollweide_theta(theta, lat);
+				theta = mollweide_theta(theta, lat);
+        	}
+        	float y = mollweide_y(theta);
+			float x = mollweide_x(theta, lon);
+			vec2 uv = (vec2(x,y) / (vec2(2,1) * sqrt(2.)) + 1.) / 2.;
+
+            gl_FragColor = texture2D(texture1, uv); //vec4(lon, lat, 0,1);//  //vec4(uv,0,1); //
+        }
+    </script> 
 
 	<script type="text/javascript">
 

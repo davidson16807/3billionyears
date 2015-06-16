@@ -349,6 +349,8 @@ var times = {
 				var option = $('<option>', {value: value, text: key});
 				$('#times').append(option)
 			};
+			$('#times').val(times[0]);
+			loadUrl('maps/'+times[0]);
 		})
 		$('#times').bind('keydown change', (function(event) {
 			var file = $('#times').val().toString();

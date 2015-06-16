@@ -34,6 +34,26 @@
 		</div>
 	</div> 
 
+    <script type="x-shader/x-vertex" id="vertexShader">
+		varying vec2 vUv;
+		varying vec4 vPosition;
+		
+		void main() {
+			vUv = uv;
+			vPosition = modelMatrix * vec4( position, 1.0 );
+			gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+		}
+    </script>
+    <script type="x-shader/x-fragment" id="fragmentShader">
+        varying vec2 vUv;
+        varying vec4 vPosition;
+        uniform sampler2D texture1;
+
+        void main() {
+            gl_FragColor = texture2D(texture1, vUv.xy);
+        }
+    </script>
+
 	<script type="text/javascript">
 
 var times = {
@@ -196,14 +216,22 @@ var times = {
 "+300": "270.+300m.png",
 }
 
-		var stats, scene, renderer, composer;
+		var scene, renderer, composer;
 		var camera, cameraControl;
 	    var image = document.createElement( 'img' );
-
-		var geometry	= new THREE.IcosahedronGeometry(1, 5);
 	    var texture = new THREE.Texture( image );
-		var material	= new THREE.MeshLambertMaterial({map: texture});
-		var mesh	= new THREE.Mesh( geometry, material ); 	
+	    var shader = new THREE.ShaderMaterial({
+	        vertexShader: document.getElementById('vertexShader').textContent,
+	        fragmentShader: document.getElementById('fragmentShader').textContent,
+	        uniforms: {
+	            texture1: {
+	                type: "t",
+	                value: texture
+	            }
+	        }
+	    });
+		var geometry	= new THREE.IcosahedronGeometry(1, 5);
+		var mesh	= new THREE.Mesh( geometry, shader ); 	
 
 		if( !init() )	animate();
 
@@ -282,12 +310,10 @@ var times = {
 		}
 		function loadUrl (texture_url) {
 			texture = THREE.ImageUtils.loadTexture( texture_url );
-		    // texture = new THREE.Texture( image );
-		    image.onload = function()  {
-		        texture.needsUpdate = true;
-		    };
-		    material.map = texture;
-		    material.needsUpdate = true;
+			texture.needsUpdate = true;
+		    shader.uniforms.texture1.value = texture;
+		    shader.uniforms.texture1.needsUpdate = true;
+		    shader.needsUpdate = true;
 		}
 		$(function () {
 			for (var i = 0, keys = Object.keys(times), li = Object.keys(times).length; i < li; i++) {

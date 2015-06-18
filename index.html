@@ -3,7 +3,6 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-		
 			
 		<script src="http://code.jquery.com/jquery.min.js"></script>
 		<script src="vendor/three.js/Three.js"></script>
@@ -20,18 +19,15 @@
 	<!-- three.js container -->
     	<div id="container"></div>
 	<!-- info on screen display -->
-	<div id="info">
-		<div class="top">
+
+	<div class="bottom info" >
+<!-- 		<img id="play" src="icons/play-circled-512px.svg" width="64px" class="hcenter"/>
+		<img id="pause" src="icons/pause-circled-512px.svg" width="64px" class="hcenter"/> -->
+		<input id="userImage" type="file" class="left"/>
+		<div class="right">
+			<span id="time-label">Present</span>
 		</div>
-		<div class="bottom" id="inlineDoc" >
-			<select name="times" id="times">
-			</select>
-			<br/>
-			<input id="userImage" type="file"/>
-		</div> 
-		<div id="drop-dialog" class="hidden">
-			<h2>DRAG HERE</h2>
-		</div>
+		<input id="time" type="range" min="-3300", max="300" step="10" value="0" style="width:100%;"/>
 	</div> 
 
     <script type="x-shader/x-vertex" id="vertexShader">
@@ -69,6 +65,8 @@
         	float lon = (2. * vUv.x - 1.0) * (PI);
 			float theta = lat;
         	if(abs(lat) != PI/2.){
+				theta = mollweide_theta(theta, lat);
+				theta = mollweide_theta(theta, lat);
 				theta = mollweide_theta(theta, lat);
 				theta = mollweide_theta(theta, lat);
 				theta = mollweide_theta(theta, lat);
@@ -353,10 +351,46 @@ var times = {
 			};
 			$('#times').val('0');
 			loadTexture(times[0].texture);
+			$('#time-label').text(format(0));
 		})
+
+		function min(list, getKey) {
+			var value = Infinity;
+			var result = void 0;
+			for (var i = 0, li = list.length; i < li; i++) {
+				var element = list[i];
+				var key = getKey(element);
+				if(key < value){
+					value = key;
+					result = element;
+				}
+			};
+			return result;
+		};
+
+		function format (time) {
+			if(time > 0){
+				return ""+time+" Million years hence"
+			} else if (time == 0){
+				return "Present Day";
+			} else {
+				return ""+Math.abs(time)+" Million years ago"
+			}
+		}
+
+		$('#time').bind('input', function(event) {
+			var time = $('#time').val();
+			$('#time-label').text(format(time));
+			var keys = Object.keys(times);
+			var key = min(keys, function(key) {
+				return Math.abs(time - key);
+			});
+			var texture = times[key].texture;
+			loadTexture(texture);
+		});
 		$('#times').bind('keydown change', (function(event) {
 			var key = $('#times').val().toString();
-			var texture = times[key].texture
+			var texture = times[key].texture;
 			loadTexture(texture);
 		}));
 		$("#userImage").change(function(){

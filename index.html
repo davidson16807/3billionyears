@@ -21,14 +21,18 @@
 	<!-- info on screen display -->
 
 	<div class="bottom info" >
-<!-- 		<img id="play" src="icons/play-circled-512px.svg" width="64px" class="hcenter"/>
-		<img id="pause" src="icons/pause-circled-512px.svg" width="64px" class="hcenter"/> -->
 		<input id="userImage" type="file" class="left"/>
 		<div class="right">
-			<span id="time-label">Present</span>
+			<span id="time-label">Loading images...</span>
 		</div>
 		<input id="time" type="range" min="-3300", max="300" step="10" value="0" style="width:100%;"/>
 	</div> 
+
+	<div class="bigbutton">
+		<img id="loading" src="icons/loading-spin.svg" width="64px" class="hcenter"/>
+		<img id="play" src="icons/play-circled-512px.svg" width="64px" class="hcenter"/>
+		<img id="pause" src="icons/pause-circled-512px.svg" width="64px" class="hcenter"/>
+	</div>
 
     <script type="x-shader/x-vertex" id="vertexShader">
 		varying vec2 vUv;
@@ -81,7 +85,7 @@
 
 	<script type="text/javascript">
 
-var times = {
+var textures = {
 "-3300":  { url: "117.9.-3300m.png" },
 "-3000":  { url: "118.9.-3000m.png" },
 "-2750":  { url: "119.9.-2750m.png" },
@@ -241,27 +245,32 @@ var times = {
 "+300":  { url: "270.+300m.png" },
 }
 
-		var scene, renderer, composer;
+		var scene, renderer, composer, clock;
 		var camera, cameraControl;
 	    var image = document.createElement( 'img' );
-	    var texture = new THREE.Texture( image );
 	    var shader = new THREE.ShaderMaterial({
 	        vertexShader: document.getElementById('vertexShader').textContent,
 	        fragmentShader: document.getElementById('fragmentShader').textContent,
 	        uniforms: {
 	            texture1: {
 	                type: "t",
-	                value: texture
+	                value: new THREE.Texture( image )
 	            }
 	        }
 	    });
 		var geometry	= new THREE.IcosahedronGeometry(1, 5);
 		var mesh	= new THREE.Mesh( geometry, shader ); 	
+		var MegaYearsPerSecond = 20;
+		var Paused = true;
+		var Time = 0;
 
-		if( !init() )	animate();
-
+		if( !init() ){
+			animate();
+		}
+		
 		// init the scene
 		function init(){
+			clock = new THREE.Clock();
 
 			if( Detector.webgl ){
 				renderer = new THREE.WebGLRenderer({
@@ -307,52 +316,28 @@ var times = {
 			// - see details at http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
 			requestAnimationFrame( animate );
 
-			// do the render
-			render();
-
-		}
-
-		// render the scene
-		function render() {
 			// variable which is increase by Math.PI every seconds - usefull for animation
 			var PIseconds	= Date.now() * Math.PI;
 
 			// update camera controls
 			cameraControls.update();
 
-
 			// actually render the scene
 			renderer.render( scene, camera );
-		}
-		function loadFile (texture_file) {
-			var reader = new FileReader();
 
-			reader.onload = function (e) {
-			    loadUrl(e.target.result);
-			};
+			if(Paused){
+				return;
+			}
 
-			reader.readAsDataURL(texture_file);
+			var seconds = clock.getDelta();
+			if (seconds > 1){
+				seconds = 1;
+			}
+			
+			var timestep = seconds * MegaYearsPerSecond;
+			Time += timestep;
+			loadTime(Time);
 		}
-		function loadUrl (texture_url) {
-			texture = THREE.ImageUtils.loadTexture( texture_url );
-			loadTexture(texture_url);
-		}
-		function loadTexture (texture){
-		    shader.uniforms.texture1.value = texture;
-		    shader.uniforms.texture1.needsUpdate = true;
-		    shader.needsUpdate = true;	
-		}
-		$(function () {
-			for (var i = 0, keys = Object.keys(times), li = Object.keys(times).length; i < li; i++) {
-				var key = keys[i];
-				var option = $('<option>', {value: key, text: key});
-				$('#times').append(option)
-				times[key].texture = THREE.ImageUtils.loadTexture( "maps/" + times[key].url );
-			};
-			$('#times').val('0');
-			loadTexture(times[0].texture);
-			$('#time-label').text(format(0));
-		})
 
 		function min(list, getKey) {
 			var value = Infinity;
@@ -367,7 +352,7 @@ var times = {
 			};
 			return result;
 		};
-
+		
 		function format (time) {
 			if(time > 0){
 				return ""+time+" Million years hence"
@@ -378,26 +363,68 @@ var times = {
 			}
 		}
 
-		$('#time').bind('input', function(event) {
-			var time = $('#time').val();
-			$('#time-label').text(format(time));
-			var keys = Object.keys(times);
+		function loadFile (texture_file) {
+			var reader = new FileReader();
+
+			reader.onload = function (e) {
+			    loadUrl(e.target.result);
+			};
+
+			reader.readAsDataURL(texture_file);
+		}
+		function loadTexture (texture){
+		    shader.uniforms.texture1.value = texture;
+		    shader.uniforms.texture1.needsUpdate = true;
+		    shader.needsUpdate = true;	
+		}
+		function loadUrl (texture_url) {
+			texture = THREE.ImageUtils.loadTexture( texture_url );
+			loadTexture(texture_url);
+		}
+		function loadTime (time) {
+			var keys = Object.keys(textures);
 			var key = min(keys, function(key) {
 				return Math.abs(time - key);
 			});
-			var texture = times[key].texture;
+			var texture = textures[key].texture;
 			loadTexture(texture);
+			$('#time-label').text(format(parseInt(key)));
+			$('#time').val(time);
+		}
+
+		$(function () {
+			$('#play').hide();
+			$('#pause').hide();
+			for (var i = 0, keys = Object.keys(textures), li = Object.keys(textures).length; i < li; i++) {
+				var key = keys[i];
+				var option = $('<option>', {value: key, text: key});
+				$('#times').append(option);
+				textures[key].texture = THREE.ImageUtils.loadTexture( "maps/" + textures[key].url );
+			};
+			$('#loading').hide();
+			$('#play').show();
+			$('#times').val('0');
+			loadTime(0);
 		});
-		$('#times').bind('keydown change', (function(event) {
-			var key = $('#times').val().toString();
-			var texture = times[key].texture;
-			loadTexture(texture);
-		}));
+		$('#time').bind('input', function(event) {
+			Time = parseInt($('#time').val());
+			loadTime(Time);
+		});
 		$("#userImage").change(function(){
 		    userImage = $("#userImage")[0];
 		    if (userImage.files && userImage.files[0]) {
 		        loadFile(userImage.files[0])
 		    }
+		});
+		$('#play').click(function () {
+			$('#play').toggle();
+			$('#pause').toggle();
+			Paused = false;
+		});
+		$('#pause').click(function () {
+			$('#play').toggle();
+			$('#pause').toggle();
+			Paused = true;
 		});
 	</script>
 </body>

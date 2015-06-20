@@ -1,6 +1,8 @@
 <!doctype html>
 <html>
 	<head>
+		<title>3 billion years</title>
+
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 			
@@ -12,13 +14,28 @@
 		<script src="vendor/threex/THREEx.screenshot.js"></script>
 		<script src="vendor/threex/THREEx.WindowResize.js"></script>
 		<script src="vendor/threex.dragpancontrols.js"></script>
+		<script src="vendor/threex/THREEx.Debug.js"></script>
 
 		<link  href="css/main.css" rel="stylesheet"/>
 	</head>
 <body>
+	<div class="top left header">
+		<h1><a href="blog/">3 billion years</a></h1>
+		<div class="navigation">
+<!-- 			<a href="#">ABOUT</a>&nbsp;
+			<a href="#">CREDITS</a>&nbsp; -->
+			<a href="http://github.com/davidson16807/3billionyears">CODE</a>&nbsp;
+		</div>
+	</div>
 	<!-- three.js container -->
     	<div id="container"></div>
 	<!-- info on screen display -->
+
+	<div class="bigbutton">
+		<img id="loading" src="icons/loading-spin.svg" width="64px" class="hcenter"/>
+		<img id="play" src="icons/play-circled-512px.svg" width="64px" class="hcenter"/>
+		<img id="pause" src="icons/pause-circled-512px.svg" width="64px" class="hcenter"/>
+	</div>
 
 	<div class="bottom info" >
 		<input id="userImage" type="file" class="left"/>
@@ -27,12 +44,6 @@
 		</div>
 		<input id="time" type="range" min="-3300", max="300" step="10" value="0" style="width:100%;"/>
 	</div> 
-
-	<div class="bigbutton">
-		<img id="loading" src="icons/loading-spin.svg" width="64px" class="hcenter"/>
-		<img id="play" src="icons/play-circled-512px.svg" width="64px" class="hcenter"/>
-		<img id="pause" src="icons/pause-circled-512px.svg" width="64px" class="hcenter"/>
-	</div>
 
     <script type="x-shader/x-vertex" id="vertexShader">
 		varying vec2 vUv;
@@ -363,21 +374,28 @@ var textures = {
 			}
 		}
 
-		function loadFile (texture_file) {
-			var reader = new FileReader();
-
-			reader.onload = function (e) {
-			    loadUrl(e.target.result);
-			};
-
-			reader.readAsDataURL(texture_file);
-		}
 		function loadTexture (texture){
 		    shader.uniforms.texture1.value = texture;
 		    shader.uniforms.texture1.needsUpdate = true;
 		    shader.needsUpdate = true;	
 		}
+		function loadFile (texture_file) {
+			var reader = new FileReader();
+
+			reader.onload = function (e) {
+				var image = document.createElement( 'img' );
+				var texture = new THREE.Texture( image );
+				image.onload = function()  {
+				    texture.needsUpdate = true;
+				};
+				image.src = e.target.result;
+			    loadTexture(texture);
+			};
+
+			reader.readAsDataURL(texture_file);
+		}
 		function loadUrl (texture_url) {
+
 			texture = THREE.ImageUtils.loadTexture( texture_url );
 			loadTexture(texture_url);
 		}

@@ -1,3 +1,8 @@
+@font-face
+{
+	font-family: Garogier;
+	src: url(../fonts/Garogier_unhinted.otf);
+}
 body {
 	overflow	: hidden;
 	padding		: 0;
@@ -8,8 +13,44 @@ body {
 	font-family	: arial;
 	font-size	: 100%;
 }
-.info{
-	color: #DDDDDD;
+
+h1,h2,h3 {
+	font-family: Garamond, Garogier, serif;
+}
+h1 {
+	font-size: 261%;
+	margin-bottom: 0.502%; 
+	margin-top: 0.502%;
+}
+
+.header {
+    font-weight:bold;
+}
+.header a {
+	color : white;
+	text-decoration	: none;
+}
+.header a:hover {
+	text-decoration	: none;
+}
+.navigation
+{
+	font-size: 76.3%;
+	margin-left: 23.6%;
+	width: 161%;
+}
+.navigation a:hover {
+	color: grey;
+	text-decoration	: none;
+}
+.article{
+	color: black;
+	background-color: white;
+}
+
+.top {
+	position: absolute;
+	top: 1em;
 }
 .bottom {
 	position: absolute;
@@ -35,3 +76,7 @@ body {
 .hidden {
 	display: none;
 }
+.info{
+	color: #DDDDDD;
+}
+

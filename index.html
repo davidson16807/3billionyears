@@ -20,10 +20,10 @@
 	</head>
 <body>
 	<div class="top left header">
-		<h1><a href="blog/">3 billion years</a></h1>
+		<h1><a href="http://davidson16807.github.io/3billionyears/">3 billion years</a></h1>
 		<div class="navigation">
-<!-- 			<a href="#">ABOUT</a>&nbsp;
-			<a href="#">CREDITS</a>&nbsp; -->
+			<a href="#" id="about">ABOUT</a>&nbsp;
+			<a href="#" id="credits">CREDITS</a>&nbsp;
 			<a href="http://github.com/davidson16807/3billionyears">CODE</a>&nbsp;
 		</div>
 	</div>
@@ -31,6 +31,58 @@
     	<div id="container"></div>
 	<!-- info on screen display -->
 
+	<div id="about-section" class="hidden details">
+		<p>This is the globe as it would appear in the distant past.</p>
+		<p>
+		It is a best guess. Scientists reconstruct maps like this from a number of methods.
+		The most common method relies on the way rocks record the past direction of Earth's magnetic field.
+		This method can be used to determine the latitude at which a rock formed.
+		With a large enough dataset, scientists can reconstruct the entire Earth.
+		</p> 
+		</p>Times prior to 1 billion years have a large uncertainty.</p>
+		<p>Landmass is color coded by modern day location:</p>
+		<ul>
+			<li style="color:IndianRed">Africa</li>
+			<li style="color:Azure">Antarctica</li>
+			<li style="color:SlateBlue">Oceania</li>
+			<li style="color:DarkSlateBlue">Eurasia</li>
+			<li style="color:OliveDrab">North America</li>
+			<li style="color:Khaki">South America</li>
+		</ul>
+		<p>White landmass has no modern counterpart</p>
+	</div>
+
+	<div id="credits-section" class="hidden details">
+		<h2>Credits</h2>
+		<dl style="padding-left:1em">
+			<dt>Textures</dt>
+			<dd>revrunnertech2772 (<a href="https://www.youtube.com/channel/UCRr8E9l1JA-RUhTc9NIm8Iw">Algol</a>)</dd>
+
+			<dt>Programming</dt>
+			<dd>Carl Davidson (<a href="https://github.com/davidson16807/">16807</a>)</dd>
+
+			<dt>Reconstructions</dt>
+			<dd>Christopher Scotese, <a href="http://www.scotese.com/">PALEOMAP Project</a></dd>
+		</dl>
+		
+		<h2>Citations</h2>
+		<div style="padding-left:1em">
+			<p>Scotese, C.R., 2014. <a href="http://youtu.be/tObhGzHH2aw">Animation: Paleogeography (750Ma - Present day)</a>, PALEOMAP Project, Evanston IL.</p>
+			<p>Eglington, B., Evans, D., Phrsson, S., 2012. <a href="http://youtu.be/2o9EhDwEzUQ">Animation: Palaeoproterozoic development of the Nuna supercontinent.</a></p>
+		</div>
+		
+		<h2>Links</h2>
+		<dl style="padding-left:1em">
+			<dt><a href="http://www.youtube.com/watch?v=UwWWuttntio/">Continental Drift: 3.3 Billion Years</a></dt>
+			<dt><a href="http://www.scotese.com/">PALEOMAP Project</a></dt>
+		</dl>
+
+		<h2>Resources Used</h2>
+		<div style="padding-left:1em">
+			GIMP 2, Magic Morph, Camtasia Studio, ConverterLite, ImageMagick, Three.js
+		</div>
+	</div>
+	</div>
 	<div class="bigbutton">
 		<img id="loading" src="icons/loading-spin.svg" width="64px" class="hcenter"/>
 		<img id="play" src="icons/play-circled-512px.svg" width="64px" class="hcenter"/>
@@ -444,6 +496,15 @@ var textures = {
 			$('#pause').toggle();
 			Paused = true;
 		});
+		$('#about').click(function(event) {
+			$('#credits-section').hide();
+			$('#about-section').toggle();
+		});
+		$('#credits').click(function(event) {
+			$('#about-section').hide();
+			$('#credits-section').toggle();
+		});
+		
 	</script>
 </body>
 </html>

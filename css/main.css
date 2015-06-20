@@ -69,6 +69,21 @@ h1 {
 	float: right;
 	padding-right: 1em;
 }
+.details{
+	color: #DDDDDD;
+	position: absolute;
+	left: 1em;
+	top: 6em;
+	width:38.2%;
+	background: rgba(0,0,0,0.5);
+}
+.details a {
+	color: grey;
+}
+.details a:hover {
+	color: grey;
+	text-decoration	: none;
+}
 .hcenter {
 	display: block;
 	margin: auto;
@@ -79,4 +94,3 @@ h1 {
 .info{
 	color: #DDDDDD;
 }
-

@@ -132,8 +132,8 @@
         }
 
         void main() {
-        	float lat = (2. * vUv.y - 1.0) * (PI/2.);
-        	float lon = (2. * vUv.x - 1.0) * (PI);
+        	float lat = asin(vPosition.y);
+        	float lon = atan(vPosition.x, vPosition.z);
 			float theta = lat;
         	if(abs(lat) != PI/2.){
 				theta = mollweide_theta(theta, lat);

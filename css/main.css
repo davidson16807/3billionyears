@@ -19,6 +19,8 @@ h1,h2,h3 {
 }
 h1 {
 	font-size: 261%;
+}
+h1,h2,h3 {
 	margin-bottom: 0.502%; 
 	margin-top: 0.502%;
 }

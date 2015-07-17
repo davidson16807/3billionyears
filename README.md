@@ -23,5 +23,11 @@ Eglington, B., Evans, D., Pehrsson, S., 2012. Animation: Palaeoproterozoic devel
 ###Links
  * Continental Drift: 3.3 Billion Years
  * PALEOMAP Project
- * Resources Used
- * GIMP 2·Magic Morph·Camtasia Studio·ConverterLite·ImageMagick·Three.js
+ 
+###Resources Used
+ * GIMP 2
+ * Magic Morph
+ * Camtasia Studio
+ * ConverterLite
+ * ImageMagick
+ * Three.js

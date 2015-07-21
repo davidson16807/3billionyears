@@ -7,16 +7,16 @@
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 			
 		<script src="http://code.jquery.com/jquery.min.js"></script>
-		<script src="vendor/three.js/Three.js"></script>
-		<script src="vendor/three.js/Detector.js"></script>
-		<script src="vendor/three.js/OrbitControls.js"></script>
+		<script src="libraries/three.js/Three.js"></script>
+		<script src="libraries/three.js/Detector.js"></script>
+		<script src="libraries/three.js/OrbitControls.js"></script>
 
-		<script src="vendor/threex/THREEx.screenshot.js"></script>
-		<script src="vendor/threex/THREEx.WindowResize.js"></script>
-		<script src="vendor/threex.dragpancontrols.js"></script>
-		<script src="vendor/threex/THREEx.Debug.js"></script>
+		<script src="libraries/threex/THREEx.screenshot.js"></script>
+		<script src="libraries/threex/THREEx.WindowResize.js"></script>
+		<script src="libraries/threex.dragpancontrols.js"></script>
+		<script src="libraries/threex/THREEx.Debug.js"></script>
 
-		<link  href="css/main.css" rel="stylesheet"/>
+		<link  href="styles/main.css" rel="stylesheet"/>
 	</head>
 <body>
 	<div class="top left header">
@@ -311,7 +311,17 @@ var textures = {
 "+275":  { url: "270.+275m.png" },
 "+300":  { url: "270.+300m.png" },
 }
-
+// textures = {
+// "-410": { url: "old/410ma.PNG" },
+// "-390": { url: "old/390ma.PNG" },
+// "-370": { url: "old/370ma.PNG" },
+// "-350": { url: "old/350ma.PNG" },
+// "-330": { url: "old/330ma.PNG" },
+// "-310": { url: "old/310ma.PNG" },
+// "-290": { url: "old/290ma.PNG" },
+// "-270": { url: "old/270ma.PNG" },
+// "-250": { url: "old/250ma.PNG" },
+// }
 		var scene, renderer, composer, clock;
 		var camera, cameraControl;
 	    var image = document.createElement( 'img' );
@@ -469,15 +479,18 @@ var textures = {
 		$(function () {
 			$('#play').hide();
 			$('#pause').hide();
-			for (var i = 0, keys = Object.keys(textures), li = Object.keys(textures).length; i < li; i++) {
+			var keys = Object.keys(textures);
+			$('#time').attr({
+				'min': min(keys, function(key) { return Number(key) }),
+				'max': min(keys, function(key) { return -Number(key) }),
+				'value': min(keys, function(key) { return Math.abs(key) })
+			});
+			for (var i = 0, li = Object.keys(textures).length; i < li; i++) {
 				var key = keys[i];
-				var option = $('<option>', {value: key, text: key});
-				$('#times').append(option);
 				textures[key].texture = THREE.ImageUtils.loadTexture( "maps/" + textures[key].url );
 			};
 			$('#loading').hide();
 			$('#play').show();
-			$('#times').val('0');
 			loadTime(0);
 		});
 		$('#time').bind('input', function(event) {
